@@ -2,21 +2,33 @@ import pandas as pd
 import numpy as np
 # import random as rd
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
 
-data = pd.read_csv('karachi_dis_cod_month_as_no.csv')
+data = pd.read_csv('karachi_dis_cod_month_as_no_crimeType_as_no.csv')
 # print(data.head())
-x_axis = "Month"
+x_axis = "Crime Type"
 y_axis = "Reported Number"
 X = data[[x_axis, y_axis]]
+# print(X)
 # Visualise data points
 # plt.scatter(X[x_axis],X[y_axis],c='black')
 # plt.xlabel(x_axis)
 # plt.ylabel('Reported')
 # plt.show()
 
-K = 8
+# preprocessing
+scaler = MinMaxScaler()
+scaler.fit(data[[x_axis]])
+data[[x_axis]] =scaler.transform(data[[x_axis]])
+# for y_axis
+scaler = MinMaxScaler()
+scaler.fit(data[[y_axis]])
+data[[y_axis]] =scaler.transform(data[[y_axis]])
+X = data[[x_axis, y_axis]]
+# print(X)
+K = 4
 
-# Select random observation as centroids
+# selecting random observation as centroids
 Centroids = (X.sample(n=K))
 # plt.scatter(X[x_axis],X[y_axis],c='black')
 # plt.scatter(Centroids[x_axis],Centroids[y_axis],c='red')
@@ -66,4 +78,4 @@ plt.scatter(Centroids[x_axis], Centroids[y_axis], c='red')
 plt.xlabel(x_axis)
 plt.ylabel(y_axis)
 plt.show()
-print(data)
+# print(data)
