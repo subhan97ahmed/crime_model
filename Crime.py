@@ -1,6 +1,5 @@
 from pydantic import BaseModel
 
-
 class Crime(BaseModel):
     year: int
     month: int
