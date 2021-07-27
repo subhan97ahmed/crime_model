@@ -1,20 +1,19 @@
 import uvicorn as uvicorn
 from fastapi import FastAPI
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
-
 from Crime import Crime
 import pickle
-import pandas as pd
-import numpy as np
 
 app = FastAPI()
 input = open("model.pkl", "rb")
 model = pickle.load(input)
-model =model(probability=True)
 
 @app.get('/')
 def index():
     return {"message": "hello"}
+
+@app.get('/{name}')
+def get_name(name:str):
+    return {"message": "hello "+name}
 
 
 @app.post('/predict')
@@ -27,10 +26,13 @@ def predict_rate(data:Crime):
     area2 = data['area2']
     crimeType = data['crimeType']
     pre = model.predict([[year,month,area1,area2,crimeType]])
-    # if  pre[0]>0.5:
     return {
+            'year': str(year),
+            'month': str(month),
+            'area1': str(area1),
+            'area2': str(area2),
+            'crimeType': str(crimeType),
             'prediction': str(pre),
-            'prediction_prob': str()
         }
 
 
