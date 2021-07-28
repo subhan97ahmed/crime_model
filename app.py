@@ -2,10 +2,43 @@ import uvicorn as uvicorn
 from fastapi import FastAPI
 from Crime import Crime
 import pickle
+from Crime import  Crime_Wo_Districts
 
 app = FastAPI()
 input = open("model.pkl", "rb")
 model = pickle.load(input)
+
+points = [
+    {
+        "name": 'south',
+        "lat": 24.8605,
+        "lng": 67.0261
+    },
+    {
+        # // east
+        "name": 'east',
+        "lat": 24.8844,
+        "lng": 67.1443
+    },
+    {
+        # // west
+        "name": 'west',
+        "lat": 24.8829,
+        "lng": 66.9748
+    },
+    {
+        # // central
+        "name": 'central',
+        "lat": 24.9313,
+        "lng": 67.0374
+    },
+    {
+        # // malir
+        "name": 'malir',
+        "lat": 25.0960,
+        "lng": 67.1871
+    }
+]
 
 
 @app.get('/')
@@ -35,6 +68,31 @@ def predict_rate(data: Crime):
         'area2': str(area2),
         'crimeType': str(crimeType),
         'prediction': str(pre),
+    }
+
+
+@app.post('/predicts')
+def predict_rate_of_different_districts(data: Crime_Wo_Districts):
+    data = data.dict()
+    pres = []
+    year = data['year']
+    month = data['month']
+    crimeType = data['crimeType']
+    for i in range(0, 5):
+        area1 = points[i].get("lat")
+        area2 = points[i].get("lat")
+        print(area1)
+        pres.append(model.predict([[year, month, area1, area2, crimeType]]))
+    return {
+        'year': str(year),
+        'month': str(month),
+        'crimeType': str(crimeType),
+        'prediction': str(pres),
+        'south_prediction': str(pres[0]),
+        'east_prediction': str(pres[1]),
+        'west_prediction': str(pres[2]),
+        'central_prediction': str(pres[3]),
+        'malir_prediction': str(pres[4]),
     }
 
 
