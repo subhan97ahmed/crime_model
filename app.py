@@ -80,7 +80,7 @@ def predict_rate_of_different_districts(data: Crime_Wo_Districts):
     crimeType = data['crimeType']
     for i in range(0, 5):
         area1 = points[i].get("lat")
-        area2 = points[i].get("lat")
+        area2 = points[i].get("lng")
         print(area1)
         pres.append(model.predict([[year, month, area1, area2, crimeType]]))
     return {
