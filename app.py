@@ -1,10 +1,12 @@
 import uvicorn as uvicorn
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
+import numpy  as np
 
-from Crime import Crime
+import mlp_model
+from Crime import Crime, Csv_Data
 import pickle
-from Crime import  Crime_Wo_Districts
+from Crime import Crime_Wo_Districts
 
 app = FastAPI()
 origins = ['*']
@@ -94,6 +96,8 @@ def predict_rate_of_different_districts(data: Crime_Wo_Districts):
         area2 = points[i].get("lng")
         print(area1)
         pres.append(model.predict([[year, month, area1, area2, crimeType]]))
+        print(np.asfarray(model.predict([[year, month, area1, area2, crimeType]]), float))
+
     return {
         'year': str(year),
         'month': str(month),
@@ -105,6 +109,23 @@ def predict_rate_of_different_districts(data: Crime_Wo_Districts):
         'central_prediction': str(pres[3]),
         'malir_prediction': str(pres[4]),
     }
+
+
+@app.post('/csvupload')
+def csvupload_train(data: Csv_Data):
+    data = data
+    acc = mlp_model.new_model(data.data)
+    print('accuracy of ur model ', acc)
+    if acc>0.1:
+        return {
+            "accuracy": str(acc),
+            "upload": "successful",
+        }
+    else:
+        return {
+            "accuracy": str(acc),
+            "upload": "failed",
+        }
 
 
 if __name__ == '__main__':

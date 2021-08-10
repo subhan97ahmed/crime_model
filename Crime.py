@@ -13,3 +13,6 @@ class Crime_Wo_Districts(BaseModel):
     year: int
     month: int
     crimeType: int
+
+class Csv_Data(BaseModel):
+    data: list[list[str]]
