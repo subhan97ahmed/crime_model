@@ -3,8 +3,9 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 import numpy  as np
 import new_model
-from Crime import  Csv_Data,Crime_Wo_Districts
+from Crime import Crime, Csv_Data
 import pickle
+from Crime import Crime_Wo_Districts
 
 app = FastAPI()
 origins = ['*']
