@@ -4,7 +4,7 @@ from starlette.middleware.cors import CORSMiddleware
 import numpy  as np
 
 
-import new_model
+from new_model import new_model
 from Crime import Crime, Csv_Data
 import pickle
 from Crime import Crime_Wo_Districts
@@ -114,9 +114,8 @@ def predict_rate_of_different_districts(data: Crime_Wo_Districts):
 
 @app.post('/csvupload')
 def csvupload_train(data: Csv_Data):
-    data = data
     data.data.pop(0)
-    acc = new_model.new_model(data.data)
+    acc = new_model(data.data)
     print('accuracy of ur model ', acc)
     if acc>0.1:
         return {

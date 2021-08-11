@@ -14,14 +14,6 @@ class Crime_Wo_Districts(BaseModel):
     month: int
     crimeType: int
 
-class Crime_Data(BaseModel):
-    year: str
-    month: str
-    lat: str
-    log: str
-    crimeType: str
-    reported: str
-
 class Csv_Data(BaseModel):
     data: List[List[str]]
 
