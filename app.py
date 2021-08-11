@@ -21,6 +21,8 @@ app.add_middleware(
 )
 input = open("model.pkl", "rb")
 model = pickle.load(input)
+input = open("user_model.pkl", "rb")
+new_model = pickle.load(input)
 
 points = [
     {
@@ -111,11 +113,36 @@ def predict_rate_of_different_districts(data: Crime_Wo_Districts):
         'malir_prediction': str(pres[4]),
     }
 
+@app.post('/userpredicts')
+def User_predict(data: Crime_Wo_Districts):
+    data = data.dict()
+    pres = []
+    year = data['year']
+    month = data['month']
+    crimeType = data['crimeType']
+    for i in range(0, 5):
+        area1 = points[i].get("lat")
+        area2 = points[i].get("lng")
+        print(area1)
+        pres.append(new_model.predict([[year, month, area1, area2, crimeType]]))
+        print(np.asfarray(new_model.predict([[year, month, area1, area2, crimeType]]), float))
+
+    return {
+        'year': str(year),
+        'month': str(month),
+        'crimeType': str(crimeType),
+        'prediction': str(pres),
+        'south_prediction': str(pres[0]),
+        'east_prediction': str(pres[1]),
+        'west_prediction': str(pres[2]),
+        'central_prediction': str(pres[3]),
+        'malir_prediction': str(pres[4]),
+    }
 
 @app.post('/csvupload')
 def csvupload_train(data: Csv_Data):
     data.data.pop(0)
-    acc = new_model(data.data)
+    acc =  new_model(data.data)
     print('accuracy of ur model ', acc)
     if acc>0.1:
         return {
