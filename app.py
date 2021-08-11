@@ -115,6 +115,7 @@ def predict_rate_of_different_districts(data: Crime_Wo_Districts):
 @app.post('/csvupload')
 def csvupload_train(data: Csv_Data):
     data = data
+    data.data.pop(0)
     acc = new_model.new_model(data.data)
     print('accuracy of ur model ', acc)
     if acc>0.1:
