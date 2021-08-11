@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-
+from typing import List
 
 class Crime(BaseModel):
     year: int
@@ -14,5 +14,14 @@ class Crime_Wo_Districts(BaseModel):
     month: int
     crimeType: int
 
+class Crime_Data(BaseModel):
+    year: str
+    month: str
+    lat: str
+    log: str
+    crimeType: str
+    reported: str
+
 class Csv_Data(BaseModel):
-    data: list[list[str]]
+    data: List[List[str]]
+
